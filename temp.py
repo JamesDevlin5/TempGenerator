@@ -4,6 +4,7 @@ import uuid
 import pathlib
 import typing
 from abc import ABC, abstractmethod
+from argparse import ArgumentParser
 
 # The global (system-wide) temporary folder
 SYSTEM_TMP_HOME = "/tmp"
@@ -93,3 +94,31 @@ def tmp_file() -> pathlib.Path:
 def tmp_dir() -> pathlib.Path:
     """Easy-access getter for a temporary directory."""
     return TmpGen().tmp_dir()
+
+
+def main():
+    parser = ArgumentParser(
+        description="A utility script to create temporary files and/or directories"
+    )
+    type_group = parser.add_mutually_exclusive_group()
+    type_group.add_argument(
+        "--file",
+        "-f",
+        help="Create a temporary file; A single buffer of text",
+        action="store_true",
+    )
+    type_group.add_argument(
+        "--directory",
+        "-d",
+        help="Create a temporary directory; A folder which may hold a dynamic number of files",
+        action="store_true",
+    )
+    args = parser.parse_args()
+    if args.directory:
+        return f"{tmp_dir()}/"
+    else:
+        return tmp_file()
+
+
+if __name__ == "__main__":
+    print(main())
