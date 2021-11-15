@@ -12,3 +12,5 @@ by this context.
 1. Directory: The parent node of a group of files and directories. Just as before, all
    items in this directory should be assumed to be deleted after each run of the program.
 
+[![asciicast](https://asciinema.org/a/OPfA1StKEo0imUxFnQqWWEB3G.svg)](https://asciinema.org/a/OPfA1StKEo0imUxFnQqWWEB3G)
+
