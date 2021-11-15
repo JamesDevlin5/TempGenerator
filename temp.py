@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-import uuid
 import pathlib
 import typing
+import uuid
 from abc import ABC, abstractmethod
 from argparse import ArgumentParser
 
@@ -100,6 +100,19 @@ def main():
     parser = ArgumentParser(
         description="A utility script to create temporary files and/or directories"
     )
+    gen_group = parser.add_mutually_exclusive_group()
+    gen_group.add_argument(
+        "--number",
+        "-n",
+        help="Use a deterministic, numerically increasing value as the temporary object's name",
+        action="store_true",
+    )
+    gen_group.add_argument(
+        "--uuid",
+        "-u",
+        help="Use a non-deterministic universally-unique identifier as the temporary object's name",
+        action="store_true",
+    )
     type_group = parser.add_mutually_exclusive_group()
     type_group.add_argument(
         "--file",
@@ -114,10 +127,18 @@ def main():
         action="store_true",
     )
     args = parser.parse_args()
-    if args.directory:
-        return f"{tmp_dir()}/"
+    # Generator Type
+    if args.number:
+        gen = TmpGen(name_gen=CountNameGen())
+    elif args.uuid:
+        gen = TmpGen(name_gen=UuidNameGen())
     else:
-        return tmp_file()
+        gen = TmpGen()
+
+    if args.directory:
+        return f"{gen.tmp_dir()}/"
+    else:
+        return str(gen.tmp_file())
 
 
 if __name__ == "__main__":
